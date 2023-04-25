@@ -14,7 +14,7 @@
 <% List<Employee> employees = (List<Employee>) request.getAttribute("allEmployees");%>
 <style>
     table, th, td {
-        border: 1px solid;
+        border: 2px solid;
     }
 </style>
 <body>

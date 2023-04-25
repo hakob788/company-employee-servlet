@@ -9,12 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CompanyManager {
 
-    private static Connection connection = DBConnectionProvider.getInstance().getConnection();
+    private static final Connection connection = DBConnectionProvider.getInstance().getConnection();
 
     public void save(Company company) {
         String sql = "INSERT INTO company(name,country) VALUES(?,?)";
@@ -74,6 +73,7 @@ public class CompanyManager {
         }
         return companyList;
     }
+
     private Company getCompanyFromResultSet(ResultSet resultSet) throws SQLException {
         Company company = new Company();
         company.setId(resultSet.getInt("id"));
@@ -91,8 +91,6 @@ public class CompanyManager {
         }
     }
 
-
-
     public void update(Company company) {
         String sql = "UPDATE company SET name = ?, country = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -103,5 +101,6 @@ public class CompanyManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 }

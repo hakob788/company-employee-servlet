@@ -19,7 +19,7 @@ public class CompanyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Company> all = companyManager.getAll();
-        req.setAttribute("companies", all);
+        req.setAttribute("allCompanies", all);
         req.getRequestDispatcher("WEB-INF/companies.jsp").forward(req, resp);
     }
 }

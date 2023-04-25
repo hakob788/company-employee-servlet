@@ -19,7 +19,7 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Employee> all = employeeManager.getAll();
-        req.setAttribute("employees", all);
+        req.setAttribute("allEmployees", all);
         req.getRequestDispatcher("WEB-INF/employee.jsp").forward(req, resp);
     }
 }

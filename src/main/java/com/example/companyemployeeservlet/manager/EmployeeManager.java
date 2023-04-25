@@ -4,36 +4,34 @@ package com.example.companyemployeeservlet.manager;
 import com.example.companyemployeeservlet.db.DBConnectionProvider;
 import com.example.companyemployeeservlet.model.Employee;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeManager {
 
-    private Connection connection = DBConnectionProvider.getInstance().getConnection();
-    private CompanyManager companyManager = new CompanyManager();
+    private static final Connection CONNECTION = DBConnectionProvider.getInstance().getConnection();
+    private static final CompanyManager COMPANY_MANAGER = new CompanyManager();
 
     public void save(Employee employee) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = "INSERT INTO employee(name,surname,email,company_id) VALUES('%s','%s','%s',%d)";
-            String sqlFormatted = String.format(sql, employee.getName(), employee.getSurname(), employee.getEmail(),
-                    employee.getCompany(), employee.getId());
-            statement.executeUpdate(sqlFormatted, Statement.RETURN_GENERATED_KEYS);
+        String sql = "INSERT INTO employee(name,surname,email,company_id) VALUES(?,?,?,?)";
+        try (PreparedStatement statement = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, employee.getName());
+            statement.setString(2, employee.getSurname());
+            statement.setString(3, employee.getEmail());
+            statement.setInt(4, employee.getCompany().getId());
+            statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 employee.setId(generatedKeys.getInt(1));
             }
-            System.out.println("employee inserted into DB");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public Employee getById(int id) {
-        try (Statement statement = connection.createStatement()) {
+        try (Statement statement = CONNECTION.createStatement()) {
             ResultSet resultSet = statement.executeQuery("Select * from employee where id = " + id);
             if (resultSet.next()) {
                 return getEmployeeFromResultSet(resultSet);
@@ -47,7 +45,7 @@ public class EmployeeManager {
     public List<Employee> getAll() {
         List<Employee> employees = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = CONNECTION.createStatement();
             ResultSet resultSet = statement.executeQuery("Select * from employee");
             while (resultSet.next()) {
                 employees.add(getEmployeeFromResultSet(resultSet));
@@ -61,7 +59,7 @@ public class EmployeeManager {
     public List<Employee> getAllByCompanyId(int companyId) {
         List<Employee> employees = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = CONNECTION.createStatement();
             ResultSet resultSet = statement.executeQuery("Select * from employee where company_id=" + companyId);
             while (resultSet.next()) {
                 employees.add(getEmployeeFromResultSet(resultSet));
@@ -79,25 +77,27 @@ public class EmployeeManager {
         employee.setSurname(resultSet.getString("surname"));
         employee.setEmail(resultSet.getString("email"));
         int companyId = resultSet.getInt("company_id");
-        employee.setCompany(companyManager.getById(companyId));
+        employee.setCompany(COMPANY_MANAGER.getById(companyId));
         return employee;
     }
 
-
-    public void removeById(int employeeId) {
-        String sql = "DELETE FROM employee WHERE id = " + employeeId;
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);
+    public void update(Employee employee) {
+        String sql = "UPDATE employee SET name = ?, surname = ?, email = ?, company_id = ? WHERE id =" + employee.getId();
+        try (PreparedStatement statement = CONNECTION.prepareStatement(sql)) {
+            statement.setString(1, employee.getName());
+            statement.setString(2, employee.getSurname());
+            statement.setString(3, employee.getEmail());
+            statement.setInt(4, employee.getCompany().getId());
+            statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
-    public void update(Employee employee) {
-        String sql = "UPDATE company SET name = '%s', surname = '%s' ,email = '%s'";
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(String.format(sql, employee.getName(), employee.getSurname(),
-                    employee.getEmail(), employee.getCompany()));
+    public void removeById(int employeeId) {
+        String sql = "DELETE FROM employee WHERE id = " + employeeId;
+        try (Statement statement = CONNECTION.createStatement()) {
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

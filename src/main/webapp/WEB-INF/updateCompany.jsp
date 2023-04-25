@@ -1,4 +1,3 @@
-<%@ page import="com.example.companyemployeeservlet.manager.CompanyManager" %>
 <%@ page import="com.example.companyemployeeservlet.model.Company" %><%--
   Created by IntelliJ IDEA.
   User: Hakob
