@@ -40,7 +40,6 @@
         </td>
         <td><%=employee.getSurname()%>
         </td>
-        </td>
         <td><%=employee.getEmail()%>
         </td>
         <td><%=employee.getCompany().getId()%>

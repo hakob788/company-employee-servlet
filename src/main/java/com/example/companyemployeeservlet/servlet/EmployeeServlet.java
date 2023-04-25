@@ -16,7 +16,6 @@ public class EmployeeServlet extends HttpServlet {
 
     private EmployeeManager employeeManager = new EmployeeManager();
 
-    // es er menak Hakob jan?
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Employee> all = employeeManager.getAll();
