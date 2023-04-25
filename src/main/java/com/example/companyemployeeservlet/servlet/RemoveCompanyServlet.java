@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/removeCompany")
+@WebServlet("/deleteCompany")
 public class RemoveCompanyServlet extends HttpServlet {
 
     private CompanyManager companyManager = new CompanyManager();

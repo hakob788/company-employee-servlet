@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebServlet("/updateCompany")
 public class UpdateCompanyServlet extends HttpServlet {
@@ -20,7 +22,7 @@ public class UpdateCompanyServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         Company company = companyManager.getById(id);
         req.setAttribute("company", company);
-        req.getRequestDispatcher("WEB-INF/updateCompany.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/updateCompany.jsp").forward(req, resp);
     }
 
     @Override

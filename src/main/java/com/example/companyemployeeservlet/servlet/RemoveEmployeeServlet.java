@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/removeEmployee")
+@WebServlet("/deleteEmployee")
 public class RemoveEmployeeServlet extends HttpServlet {
 
     private EmployeeManager employeeManager = new EmployeeManager();
